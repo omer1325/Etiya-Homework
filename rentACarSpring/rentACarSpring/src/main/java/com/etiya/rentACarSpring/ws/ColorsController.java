@@ -1,31 +1,53 @@
 package com.etiya.rentACarSpring.ws;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.etiya.rentACarSpring.entities.Color;
+import com.etiya.rentACarSpring.business.abstracts.ColorService;
+import com.etiya.rentACarSpring.business.dtos.ColorSearchListDto;
+import com.etiya.rentACarSpring.business.request.CreateColorRequest;
+import com.etiya.rentACarSpring.business.request.DeleteColorRequest;
+import com.etiya.rentACarSpring.business.request.UpdateColorRequest;
 
 @RestController
 @RequestMapping("api/colors")
 public class ColorsController {
 
-	@GetMapping("check")
-	public String check() {
-		return "API up";
+private ColorService colorService;
+	
+
+	@Autowired
+	public ColorsController(ColorService colorService) {
+		this.colorService = colorService;
+	}
+	
+	@PostMapping("add")
+	public void add(@RequestBody CreateColorRequest createColorRequest) {
+		this.colorService.add(createColorRequest);
+	}
+	
+	@PutMapping("update")
+	public void update(@RequestBody UpdateColorRequest updateColorRequest) {
+		this.colorService.update(updateColorRequest);
+		
+	}
+	
+	@DeleteMapping("delete")
+	public void delete(@RequestBody DeleteColorRequest deleteColorRequest) {
+		this.colorService.delete(deleteColorRequest);
 	}
 	
 	@GetMapping("all")
-	public List<Color> getAll(){
-		List<Color> colors=new ArrayList<Color>();
-		colors.add(new Color(1,"black"));
-		colors.add(new Color(1,"white"));
-		colors.add(new Color(1,"blue"));
-		
-		return colors;
+	public List<ColorSearchListDto> getAll(){
+		return this.colorService.getAll();
 	}
 
 }
